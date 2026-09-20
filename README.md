@@ -71,6 +71,7 @@ This is the **production-ready refactor** of [rag-bot-chroma](https://github.com
 - Preserved citation details in chat history and CSV exports.
 - Updated the Groq model configuration to a currently supported model for compatibility.
 
+
 <details>
   <summary>🛠️ Tech Stack</summary>
 
