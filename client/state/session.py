@@ -3,7 +3,7 @@ import streamlit as st
 
 def setup_session_state():
   default_state = {
-    "chat_history": [],             # Stores tuples of (question, answer, provider, model, pdfs, timestamp)
+    "chat_history": [],             # Stores tuples of (question, answer, provider, model, pdfs, timestamp, sources)
     "chat_ready": False,            # Tracks whether chat is ready to receive user input
     "pdf_files": [],                # Currently submitted PDF files
     "last_provider": None,          # Tracks last selected provider for dynamic reloading

@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, UploadFile, File, Form
 
 from config.settings import MODEL_OPTIONS
@@ -8,7 +9,13 @@ from core.vector_database import (
     load_vectorstore
 )
 from core.llm_chain_factory import build_llm_chain
-from api.schemas import SearchQueryRequest, ChatRequest, StandardAPIResponse
+from api.schemas import (
+    SearchQueryRequest,
+    ChatRequest,
+    StandardAPIResponse,
+    SourceCitation,
+    ChatResponseData
+)
 from utils.logger import logger
 
 router = APIRouter()
@@ -103,9 +110,57 @@ async def chat(request: ChatRequest):
       logger.error("Failed to build LLM chain.")
       return StandardAPIResponse(status="error", message="Failed to create LLM chain.")
 
-    response = chain.invoke({"input": message})["answer"]
-    logger.debug("Chat response generated successfully")
-    return StandardAPIResponse(status="success", data=response)
+    chain_result = chain.invoke({"input": message})
+    answer = chain_result.get("answer", "")
+    context_docs = chain_result.get("context", [])
+
+    sources = []
+    seen_sources = set()
+
+    for doc in context_docs:
+      raw_source = doc.metadata.get("source", "") if hasattr(doc, "metadata") and doc.metadata else ""
+      if raw_source:
+        file_name = os.path.basename(str(raw_source).replace("\\", "/"))
+      else:
+        file_name = "Unknown document"
+
+      raw_page = doc.metadata.get("page") if hasattr(doc, "metadata") and doc.metadata else None
+      page = None
+      if raw_page is not None:
+        try:
+          page = int(raw_page) + 1  # Convert 0-based index to human-readable 1-based page
+        except (ValueError, TypeError):
+          page = None
+
+      # Deduplicate citations when the same filename and page occur multiple times
+      citation_key = (file_name, page)
+      if citation_key in seen_sources:
+        continue
+      seen_sources.add(citation_key)
+
+      raw_content = getattr(doc, "page_content", "") or ""
+      snippet = " ".join(raw_content.split())
+      if len(snippet) > 280:
+        snippet = snippet[:277] + "..."
+
+      sources.append(
+        SourceCitation(
+          file_name=file_name,
+          page=page,
+          snippet=snippet
+        )
+      )
+
+    chat_data = ChatResponseData(
+      answer=answer,
+      sources=sources
+    )
+
+    logger.debug("Chat response generated successfully with citations")
+    return StandardAPIResponse(
+      status="success",
+      data=chat_data.model_dump() if hasattr(chat_data, "model_dump") else chat_data.dict()
+    )
   except Exception as e:
     logger.exception("Chat endpoint encountered an error")
     return StandardAPIResponse(status="error", message=str(e))

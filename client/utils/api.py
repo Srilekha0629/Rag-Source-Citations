@@ -50,7 +50,7 @@ def upload_and_process_pdfs(model_provider, uploaded_files) -> str:
   response = requests.post(f"{API_URL}/upload_and_process_pdfs", files=files, data=data)
   return handle_response(response)
 
-def chat(model_provider, model_name, user_input) -> str:
+def chat(model_provider, model_name, user_input) -> dict:
   payload = {
     "model_provider": model_provider,
     "model_name": model_name,

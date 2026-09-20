@@ -19,7 +19,7 @@ def get_models(model_provider) -> list[str]:
 def process_uploaded_pdfs(model_provider, uploaded_files) -> str:
   return upload_and_process_pdfs(model_provider, uploaded_files)
 
-def process_user_input(model_provider, model_name, user_input) -> str:
+def process_user_input(model_provider, model_name, user_input) -> dict | str:
   return chat(model_provider, model_name, user_input)
 
 def get_documents_count(model_provider) -> int:

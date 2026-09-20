@@ -13,7 +13,7 @@ TEMPFILE_UPLOAD_DIRECTORY = "./temp/uploaded_files"
 MODEL_OPTIONS = {
   "groq": {
     "playground": "https://console.groq.com",
-    "models": ["llama-3.1-8b-instant", "llama3-70b-8192"]
+    "models": ["openai/gpt-oss-20b"]
   },
   "gemini": {
     "playground": "https://ai.google.dev",
