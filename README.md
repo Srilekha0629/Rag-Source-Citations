@@ -62,6 +62,14 @@ This is the **production-ready refactor** of [rag-bot-chroma](https://github.com
 - 🌐 Fully API-driven interaction
 
 ---
+## My Contributions
+
+- Implemented source citations for retrieved documents in RAG responses.
+- Added page-level references and relevant document snippets.
+- Extended the FastAPI chat response to return source metadata alongside the generated answer.
+- Added source references to the Streamlit chat interface.
+- Preserved citation details in chat history and CSV exports.
+- Updated the Groq model configuration to a currently supported model for compatibility.
 
 <details>
   <summary>🛠️ Tech Stack</summary>
