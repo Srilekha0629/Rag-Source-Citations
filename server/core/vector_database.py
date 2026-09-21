@@ -24,9 +24,9 @@ def get_embeddings(model_provider: str):
     return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L12-v2")
   elif model_provider == "gemini":
     return GoogleGenerativeAIEmbeddings(
-      model="models/embedding-001",
-      google_api_key=GOOGLE_API_KEY
-    )
+    model="models/gemini-embedding-001",
+    google_api_key=GOOGLE_API_KEY
+)
   else:
     logger.error(f"Unsupported LLM Provider: {model_provider}")
     raise ValueError(f"Unsupported LLM Provider: {model_provider}")
