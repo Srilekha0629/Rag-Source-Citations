@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-langchain
+langchain==0.3.27
 langchain-community
 langchain-groq
 langchain-google-genai
