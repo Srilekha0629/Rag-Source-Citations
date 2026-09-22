@@ -30,7 +30,7 @@ This demo shows the application processing a PDF, answering a question using ret
 
 ### ▶️ Watch RAG PDFBot Demo
 
-![RAG PDFBot Demo](demo/rag-demo.gif)
+![RAG PDFBot Demo](rag-demo.gif)
 ---
 
 ## 🚀 Features
