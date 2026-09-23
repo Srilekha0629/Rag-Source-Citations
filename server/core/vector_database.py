@@ -21,7 +21,7 @@ def vectorstore_exists(persist_path: str) -> bool:
 def get_embeddings(model_provider: str):
   logger.debug(f"Getting embeddings for provider: {model_provider}")
   if model_provider == "groq":
-    return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L12-v2")
+    return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
   elif model_provider == "gemini":
     return GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-001",
