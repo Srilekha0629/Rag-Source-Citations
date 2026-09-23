@@ -5,7 +5,7 @@ langchain-community
 langchain-groq
 langchain-google-genai
 chromadb
-sentence-transformers
+fastembed
 pypdf
 python-dotenv
 python-multipart
