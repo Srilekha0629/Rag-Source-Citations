@@ -1,5 +1,5 @@
 import os
-
+from functools import lru_cache
 from typing import List
 from fastapi import UploadFile
 
@@ -18,10 +18,11 @@ def vectorstore_exists(persist_path: str) -> bool:
   logger.debug(f"Vectorstore exists at {persist_path}: {exists}")
   return exists
 
+@lru_cache(maxsize=4)
 def get_embeddings(model_provider: str):
   logger.debug(f"Getting embeddings for provider: {model_provider}")
   if model_provider == "groq":
-    return FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
+    return FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5", threads=1)
   elif model_provider == "gemini":
     return GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-001",
@@ -65,8 +66,10 @@ async def upsert_vectorstore_from_pdfs(uploaded_files: List[UploadFile], model_p
     vectorstore = Chroma.from_documents(documents=chunks, embedding=embedding, persist_directory=persist_path)
     logger.debug(f"Created new vectorstore with {len(chunks)} chunks.")
 
+  load_vectorstore.cache_clear()
   return vectorstore
 
+@lru_cache(maxsize=4)
 def load_vectorstore(model_provider: str):
   persist_path = VECTORSTORE_DIRECTORY[model_provider]
   logger.debug(f"Loading vectorstore from {persist_path}")
